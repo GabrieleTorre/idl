@@ -32,12 +32,13 @@ function dst_psf_gen, wavelength, npix, dwavelength, core_dim
 	psf_in = aia_calc_psf_mod( wavelength, $
 	  npix = npix, dwavelength = dwavelength)
 
-	dim = size(/dim,psf_in)
+	m1		= fltarr(npix,npix) & m1[npix/2 , npix/2 ] = 1  
+	psf_in  = convolve(/corr, m1, psf_in) > 0.0
+	
+	xgrid	= (fltarr(npix)+1)##indgen(npix)
+	ygrid	= indgen(npix)##(fltarr(npix)+1)
 
-	xgrid	= (fltarr(dim[1])+1)##indgen(dim[0])
-	ygrid	= indgen(dim[1])##(fltarr(dim[0])+1)
-
-	center	= [fix(dim[0]/2.),fix(dim[1]/2.)]
+	center	= [fix(npix/2.),fix(npix/2.)]
 	w		= where((xgrid-center[0])^2+(ygrid-center[1])^2 le core_dim^2)
 
 	cpsf	= psf_in*0.

@@ -55,6 +55,6 @@ str = {	dst_str							,$
 		lev		:0.						,$
 		it		:0	 					,$
 		ns		:0						,$ 
-		npix	:0            ,$
+		npix	:0 			            ,$
 		bkg_method:''						}
 end		

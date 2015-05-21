@@ -228,7 +228,8 @@ function desat::deconv, index, fill = fill, it = it, lev = lev, dwavelength = dw
 			   it		: it							 ,$
 			   lev		: lev							 }
 
-		dst_em_fft, in, psf.psf, it=it, level=level
+		;dst_em_fft, in, psf.psf, it=it, level=level
+		dst_em, in , psf.psf , /fft_comp
 
 		res = reform(*in.x,dim[0],dim[1])
 
@@ -454,8 +455,9 @@ pro desat::identify_saturation_regions, info, str, psf_str, loud
     		c_stat : 0             			   ,$
     		it	   : 1                         ,$
     		lev    : 1                          }
-    
-  dst_em_fft, in, psf_str.cpsf, it=it, level=level
+   
+  dst_em, in , psf_str.cpsf , /fft_comp   
+  ;dst_em_fft, in, psf_str.cpsf, it=it, level=level
   c = im *0. & c[I_1] = *in.x
   
   ;;; SATURATED PIXEL POSITION
@@ -758,23 +760,8 @@ for I_WAV=0, size(/n_e, wav)-1 do begin
 
 		*str.bg *= mult_fact
 
-		;;; EM FOR SMALL SATURATED REGION
-		Fourier = str.ns lt 1000 ? 0 : 1
-		print,'*****	BEGIN EM	*****'
-		case Fourier of
-			0:begin
-				print, '*** SQM expectation maximization ****'
-				dst_sqm, str, psf.cpsf
-				dst_em , str, level=level, it=it
-			end
-			1:begin
-				print, '*** FFT expectation maximization ****'
-				dst_em_FFT, str, psf.cpsf, level=level, it=it
-			end
-		endcase
-		print,'*****	END EM		*****'
+		dst_em , str , psf.cpsf
 
-		
 		;;;CENTRAL PSF CORE CONVOLUTION
 		dst_disp_factor_2, str, mult_fact, psf
 		
@@ -810,10 +797,10 @@ for I_WAV=0, size(/n_e, wav)-1 do begin
 					it	   : 10                        ,$
 					lev    : 1                          }
 
-			dst_em_fft, in, psf_str.cpsf, it=10, level=1
+			dst_em , str , psf.cpsf , /fft_comp
 			c[*,iw] = *in.x
   		endfor
-stop
+  		
 		;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;PLOT;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 		if loud eq 1 then begin
 			mask_g = *str.im*0 & mask_g[*str.g] = *str.c_exp
