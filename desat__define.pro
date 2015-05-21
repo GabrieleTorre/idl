@@ -794,13 +794,13 @@ for I_WAV=0, size(/n_e, wav)-1 do begin
 					y      : ptr_new(/allocate_heap)   ,$
 					c_exp  : ptr_new(/allocate_heap)   ,$
 					c_stat : 0             			   ,$
-					it	   : 10                        ,$
+					it	   : 1                         ,$
 					lev    : 1                          }
 
-			dst_em , str , psf.cpsf , /fft_comp
+			dst_em , in , psf.cpsf , /fft_comp
 			c[*,iw] = *in.x
   		endfor
-  		
+  		stop
 		;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;PLOT;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 		if loud eq 1 then begin
 			mask_g = *str.im*0 & mask_g[*str.g] = *str.c_exp

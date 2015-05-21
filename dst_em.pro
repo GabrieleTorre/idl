@@ -13,7 +13,7 @@ function dst_sqm , str , cpsf
 
 end
 
-pro dst_em, str, cpsf, it=it, level=level , fft_comp=fft_comp
+pro dst_em, str, cpsf, it=it, level=level, fft_comp=fft_comp
 
 default , it		, str.it
 default , level		, str.lev
